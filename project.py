@@ -64,5 +64,5 @@ def animate(frame_number):
 
 N = len(x)
 ani = anim.FuncAnimation(fig, animate, frames=N, init_func=init, interval=20, blit=True)
-ani.save('fuck.gif', writer='imagemagick')
+ani.save('animation.gif', writer='imagemagick')
 plt.show()
