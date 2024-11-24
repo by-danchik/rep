@@ -6,7 +6,7 @@ import matplotlib.animation as anim
 
 def magnetic_field(t: float, x: float, y: float, z: float) -> list:
     #  function, which returns parameters of magnetic field in given time and coordinates
-    B0 = 1.0
+    B0: float = 1.0
     return np.array([B0 * np.exp(-t), B0 * np.cos(t), B0 * np.sin(t)])
 
 
@@ -37,7 +37,6 @@ def plotting(x: float, y: float, z: float) -> None:
 
 
 def animate(n: int):
-    print(n)
     ax.clear()
 
     ax.set_xlim(min(x), max(x))
@@ -53,24 +52,24 @@ def animate(n: int):
     return line
 
 
-q = 1  # charge
-m = 1  # mass
+if __name__ == "__main__":
+    q: float = 1.0  # charge
+    m: float = 1.0  # mass
 
+    initial_conditions = [0, 0, 0, 1, 0, 0]
 
-initial_conditions = [0, 0, 0, 1, 0, 0]
+    t_span: list = [0, 10]  # time limits
+    t_eval = np.linspace(t_span[0], t_span[1], 500)
 
-t_span = [0, 10]  # time limits
-t_eval = np.linspace(t_span[0], t_span[1], 500)
+    solution = solve_ivp(equations_of_motion, t_span, initial_conditions, t_eval=t_eval)
+    x, y, z = solution.y[:3]
 
-solution = solve_ivp(equations_of_motion, t_span, initial_conditions, t_eval=t_eval)
-x, y, z = solution.y[:3]
+    plotting(x, y, z)
 
-plotting(x, y, z)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    line = ax.plot([], [], [], lw=3)
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-line = ax.plot([], [], [], lw=3)
-
-N = len(x)
-ani = anim.FuncAnimation(fig, animate, frames=N, interval=20, blit=True)
-ani.save('1_particle.gif', writer='imagemagick')
+    N: int = len(x)
+    ani = anim.FuncAnimation(fig, animate, frames=N, interval=20, blit=True)
+    ani.save('1_particle.gif', writer='imagemagick')

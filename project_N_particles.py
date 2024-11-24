@@ -7,7 +7,7 @@ from random import uniform
 
 def magnetic_field(t: float, x: float, y: float, z: float) -> list:
     #  function, which returns parameters of magnetic field in given time and coordinates
-    B0 = 1.0
+    B0: float = 1.0
     return np.array([B0 * np.exp(-t), B0 * np.cos(t), B0 * np.sin(t)])
 
 
@@ -43,51 +43,45 @@ def animate(n: int):
     return line
 
 
-q = 1
-m = 1
-num_particles = 20
+if __name__ == "__main__":
+    q: float = 1.0
+    m: float = 1.0
+    num_particles: int = 20
 
+    initial_coordinates: list = [[0] * 3 for i in range(num_particles)]
+    for i in range(num_particles):
+        initial_coordinates[i][0] = uniform(-0.2, 0.2)
+        initial_coordinates[i][1] = uniform(-0.2, 0.2)
+        initial_coordinates[i][2] = uniform(-0.2, 0.2)
 
-initial_coordinates = [[0] * 3 for i in range(num_particles)]
-for i in range(num_particles):
-    initial_coordinates[i][0] = uniform(-0.2, 0.2)
-    initial_coordinates[i][1] = uniform(-0.2, 0.2)
-    initial_coordinates[i][2] = uniform(-0.2, 0.2)
+    initial_conditions: list = []
+    for i in range(num_particles):
+        initial_conditions.append([initial_coordinates[i][0],
+                                   initial_coordinates[i][1],
+                                   initial_coordinates[i][2], 1, 0, 0])
 
+    t_span: list = [0, 10]
+    t_eval = np.linspace(t_span[0], t_span[1], 500)
 
-initial_conditions = []
-for i in range(num_particles):
-    initial_conditions.append([initial_coordinates[i][0],
-                               initial_coordinates[i][1],
-                               initial_coordinates[i][2], 1, 0, 0])
+    x: list = [[0] for i in range(num_particles)]
+    y: list = [[0] for i in range(num_particles)]
+    z: list = [[0] for i in range(num_particles)]
 
+    for i in range(num_particles):
+        solution = solve_ivp(equations_of_motion, t_span, initial_conditions[i], t_eval=t_eval)
+        x[i], y[i], z[i] = solution.y[:3]
 
-t_span = [0, 10]
-t_eval = np.linspace(t_span[0], t_span[1], 500)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    line = ax.plot([], [], [], lw=3)
 
+    xlim_left = min(map(min, x))
+    xlim_right = max(map(max, x))
+    ylim_left = min(map(min, y))
+    ylim_right = max(map(max, y))
+    zlim_left = min(map(min, z))
+    zlim_right = max(map(max, z))
 
-x = [[0] for i in range(num_particles)]
-y = [[0] for i in range(num_particles)]
-z = [[0] for i in range(num_particles)]
-
-
-for i in range(num_particles):
-    solution = solve_ivp(equations_of_motion, t_span, initial_conditions[i], t_eval=t_eval)
-    x[i], y[i], z[i] = solution.y[:3]
-
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-line = ax.plot([], [], [], lw=3)
-
-
-xlim_left = min(map(min, x))
-xlim_right = max(map(max, x))
-ylim_left = min(map(min, y))
-ylim_right = max(map(max, y))
-zlim_left = min(map(min, z))
-zlim_right = max(map(max, z))
-
-
-N = len(x[0])
-ani = anim.FuncAnimation(fig, animate, frames=N, interval=20, blit=True)
-ani.save('N_particle.gif', writer='imagemagick')
+    N: int = len(x[0])
+    ani = anim.FuncAnimation(fig, animate, frames=N, interval=20, blit=True)
+    ani.save('N_particle.gif', writer='imagemagick')
