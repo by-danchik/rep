@@ -4,13 +4,13 @@ from scipy.integrate import solve_ivp
 import matplotlib.animation as anim
 
 
-def magnetic_field(t, x, y, z):
+def magnetic_field(t: float, x: float, y: float, z: float) -> list:
     #  function, which returns parameters of magnetic field in given time and coordinates
     B0 = 1.0
     return np.array([B0 * np.exp(-t), B0 * np.cos(t), B0 * np.sin(t)])
 
 
-def equations_of_motion(t, coordinates):
+def equations_of_motion(t: float, coordinates: list) -> list:
     # system of differential equations, which describe particle's motion
     x, y, z, vx, vy, vz = coordinates
     B = magnetic_field(t, x, y, z)  # F = g * [V, B]
@@ -25,7 +25,7 @@ def equations_of_motion(t, coordinates):
     return [dxdt, dydt, dzdt, dvxdt, dvydt, dvzdt]
 
 
-def plotting(x, y, z):
+def plotting(x: float, y: float, z: float) -> None:
     # plot based on the given array of points
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -36,7 +36,7 @@ def plotting(x, y, z):
     plt.show()
 
 
-def animate(n):
+def animate(n: int):
     print(n)
     ax.clear()
 
