@@ -5,13 +5,13 @@ import matplotlib.animation as anim
 
 
 def magnetic_field(t: float, x: float, y: float, z: float) -> list:
-    #  function, which returns parameters of magnetic field in given time and coordinates
+    """function, which returns parameters of magnetic field in given time and coordinates"""
     B0: float = 1.0
-    return np.array([B0 * np.exp(-t), B0 * np.cos(t), B0 * np.sin(t)])
+    return np.array([B0 * np.exp(-x), B0 * np.cos(y), B0 * np.sin(z)])
 
 
 def equations_of_motion(t: float, coordinates: list) -> list:
-    # system of differential equations, which describe particle's motion
+    """system of differential equations, which describe particle's motion"""
     x, y, z, vx, vy, vz = coordinates
     B = magnetic_field(t, x, y, z)  # F = g * [V, B]
 
@@ -26,7 +26,7 @@ def equations_of_motion(t: float, coordinates: list) -> list:
 
 
 def plotting(x: float, y: float, z: float) -> None:
-    # plot based on the given array of points
+    """plot based on the given array of points"""
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.plot(x, y, z)
@@ -53,6 +53,7 @@ def animate(n: int):
 
 
 if __name__ == "__main__":
+
     q: float = 1.0  # charge
     m: float = 1.0  # mass
 

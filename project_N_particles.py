@@ -6,13 +6,13 @@ from random import uniform
 
 
 def magnetic_field(t: float, x: float, y: float, z: float) -> list:
-    #  function, which returns parameters of magnetic field in given time and coordinates
+    """function, which returns parameters of magnetic field in given time and coordinates"""
     B0: float = 1.0
-    return np.array([B0 * np.exp(-t), B0 * np.cos(t), B0 * np.sin(t)])
+    return np.array([B0 * np.exp(-x), B0 * np.cos(y), B0 * np.sin(z)])
 
 
 def equations_of_motion(t: float, coordinates: list) -> list:
-    # system of differential equations, which describe particle's motion
+    """system of differential equations, which describe particle's motion"""
     x, y, z, vx, vy, vz = coordinates
     B = magnetic_field(t, x, y, z)  # F = g * [V, B]
 
@@ -60,14 +60,15 @@ if __name__ == "__main__":
                                    initial_coordinates[i][1],
                                    initial_coordinates[i][2], 1, 0, 0])
 
-    t_span: list = [0, 10]
-    t_eval = np.linspace(t_span[0], t_span[1], 500)
+    t_span: list = [0, 50]
+    t_eval = np.linspace(t_span[0], t_span[1], 1000)
 
     x: list = [[0] for i in range(num_particles)]
     y: list = [[0] for i in range(num_particles)]
     z: list = [[0] for i in range(num_particles)]
 
     for i in range(num_particles):
+        print(i)
         solution = solve_ivp(equations_of_motion, t_span, initial_conditions[i], t_eval=t_eval)
         x[i], y[i], z[i] = solution.y[:3]
 
